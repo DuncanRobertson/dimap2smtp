@@ -81,6 +81,10 @@ if args.config:
 
 if args.verbose:
     print "verbose mode on"
+    if args.syslog:
+       print "also logging to syslog"
+    if args.fixemail:
+       print "also fixing, HTML to text in email body"
 
 lock = lockfile.FileLock(args.lockfile)
 
@@ -133,7 +137,7 @@ for searchedemailid in uidlist:
       print "   message fetched, sender is ",sender
       print " is_multipart()", emailmessage.is_multipart()
 
-   if args.fixemailforwd:
+   if args.fixemail:
       if args.verbose:
          print "fixing html only, if we are need to...."
       hastextplain = False
