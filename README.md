@@ -10,14 +10,23 @@ All config options can be specified on the command line, or in a config file.
 The config file uses the python .ini syntax of:
 
 [anything]
+
 imap_server = imap.com
+
 from_account = fred
+
 from_password = xxxpasswordxxx
+
 to_smtp_server = mail.com
+
 to_address = bill@mail.com
+
 syslog = Yes
+
 verbose = No
+
 fixemailforwd = Yes
+
 lockfile = /tmp/this_is_a.lock
 
 
