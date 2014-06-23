@@ -29,7 +29,7 @@ syslog = Yes
 verbose = No
 fixemailforwd = Yes
 lockfile = /tmp/this_is_a.lock
-optional TCP timeout in seconds
+# optional TCP timeout in seconds
 timeout = 15
 ```
 
