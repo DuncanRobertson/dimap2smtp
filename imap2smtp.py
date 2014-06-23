@@ -79,6 +79,9 @@ if args.config:
    if settings.has_option(thesection,'lockfile'):
       args.lockfile = settings.get(thesection,'lockfile')
 
+   if settings.has_option(thesection,'timeout'):
+      socket.setdefaulttimeout(settings.getint(thesection,'timeout'))
+
 if args.verbose:
     print "verbose mode on"
     if args.syslog:
@@ -100,6 +103,7 @@ if args.verbose:
 try:
    # if we want SSL....
    # mail = imaplib.IMAP4_SSL(args.imap_server)
+
    mail = imaplib.IMAP4(args.imap_server)
    mail.login(args.from_account,args.from_password)
 except socket.gaierror, e:
