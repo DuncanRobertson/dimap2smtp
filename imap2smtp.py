@@ -201,7 +201,13 @@ for searchedemailid in uidlist:
    if args.verbose:
       print "   marked as deleted "
 
-mail.expunge()
+try:
+   mail.expunge()
+except Exception, e:
+   print "trying to expunge deleted mails on imap server %s.. Connection error: %s" % (args.imap_server,e)
+   lock.release()
+   sys.exit(1)
+
 if args.verbose:
    print "imap expunge of deleted emails"
 mail.close()
