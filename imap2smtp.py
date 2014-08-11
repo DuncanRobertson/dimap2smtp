@@ -122,16 +122,26 @@ except imaplib.IMAP4.error, e:
 if args.verbose:
     print "connected to %s with IMAP4, user account %s " % (args.imap_server, args.from_account)
 
-mail.select("inbox") # connect to inbox.
+try:
+   mail.select("inbox") # connect to inbox.
+   result, data = mail.uid('search', None, "ALL")
+except Exception, e:
+   print "trying to connect to inbox or search on imap server %s.. Connection error: %s" % (args.imap_server,e)
+   lock.release()
+   sys.exit(1)
 
-result, data = mail.uid('search', None, "ALL")
 uidlist = data[0].split()
 
 if args.verbose:
    print len(uidlist), " incoming emails pending..."
 
 for searchedemailid in uidlist:
-   result, data = mail.uid('fetch',searchedemailid, "(RFC822)")
+   try:
+      result, data = mail.uid('fetch',searchedemailid, "(RFC822)")
+   except:
+      print "trying to fetch message on imap server %s.. Connection error: %s" % (args.imap_server,e)
+      lock.release()
+      sys.exit(1)
    raw_email = data[0][1]
    emailmessage = email.message_from_string(raw_email)
    sender  = emailmessage['From']
@@ -197,7 +207,12 @@ for searchedemailid in uidlist:
       syslog.syslog("   sent via smtp to "+args.to_smtp_server)
 
    # if we got past sending the email ok... then delete it..
-   mail.uid('STORE',searchedemailid, '+FLAGS', '(\\Deleted)')
+   try:
+      mail.uid('STORE',searchedemailid, '+FLAGS', '(\\Deleted)')
+   except Exception, e:
+      print "trying to mark an email as deleted on imap server %s.. Connection error: %s" % (args.imap_server,e)
+      lock.release()
+      sys.exit(1)
    if args.verbose:
       print "   marked as deleted "
 
